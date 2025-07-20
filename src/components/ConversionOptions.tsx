@@ -1,0 +1,218 @@
+import { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Settings, Zap, Brain, Cloud } from 'lucide-react';
+
+interface ConversionOptionsProps {
+  options: ConversionOptions;
+  onOptionsChange: (options: ConversionOptions) => void;
+}
+
+export interface ConversionOptions {
+  enablePlugins: boolean;
+  useDocumentIntelligence: boolean;
+  documentIntelligenceEndpoint: string;
+  useLLMForImages: boolean;
+  llmModel: string;
+  preserveStructure: boolean;
+  extractMetadata: boolean;
+  includeImages: boolean;
+}
+
+export function ConversionOptions({ options, onOptionsChange }: ConversionOptionsProps) {
+  const updateOption = (key: keyof ConversionOptions, value: any) => {
+    onOptionsChange({
+      ...options,
+      [key]: value
+    });
+  };
+
+  return (
+    <Card className="p-6 bg-gradient-card border-border/50">
+      <div className="flex items-center gap-2 mb-6">
+        <Settings className="h-5 w-5 text-primary" />
+        <h3 className="text-lg font-semibold">Conversion Options</h3>
+      </div>
+
+      <div className="space-y-6">
+        {/* Basic Options */}
+        <div className="space-y-4">
+          <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+            Basic Settings
+          </h4>
+          
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="preserve-structure">Preserve Document Structure</Label>
+                <p className="text-xs text-muted-foreground">
+                  Maintain headings, lists, tables, and formatting
+                </p>
+              </div>
+              <Switch
+                id="preserve-structure"
+                checked={options.preserveStructure}
+                onCheckedChange={(checked) => updateOption('preserveStructure', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="extract-metadata">Extract Metadata</Label>
+                <p className="text-xs text-muted-foreground">
+                  Include file properties and EXIF data
+                </p>
+              </div>
+              <Switch
+                id="extract-metadata"
+                checked={options.extractMetadata}
+                onCheckedChange={(checked) => updateOption('extractMetadata', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="include-images">Include Images</Label>
+                <p className="text-xs text-muted-foreground">
+                  Process and describe images in documents
+                </p>
+              </div>
+              <Switch
+                id="include-images"
+                checked={options.includeImages}
+                onCheckedChange={(checked) => updateOption('includeImages', checked)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Advanced Options */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4 w-4 text-primary" />
+            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+              Advanced Features
+            </h4>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="enable-plugins">Enable Plugins</Label>
+                  <Badge variant="secondary" className="text-xs">Experimental</Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Use 3rd-party plugins for enhanced processing
+                </p>
+              </div>
+              <Switch
+                id="enable-plugins"
+                checked={options.enablePlugins}
+                onCheckedChange={(checked) => updateOption('enablePlugins', checked)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* AI-Powered Options */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Brain className="h-4 w-4 text-primary" />
+            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+              AI-Powered Processing
+            </h4>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="llm-images">AI Image Description</Label>
+                  <Badge variant="outline" className="text-xs">Premium</Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Use GPT-4o to generate detailed image descriptions
+                </p>
+              </div>
+              <Switch
+                id="llm-images"
+                checked={options.useLLMForImages}
+                onCheckedChange={(checked) => updateOption('useLLMForImages', checked)}
+              />
+            </div>
+
+            {options.useLLMForImages && (
+              <div className="ml-4 space-y-2">
+                <Label htmlFor="llm-model" className="text-sm">Model</Label>
+                <select
+                  id="llm-model"
+                  value={options.llmModel}
+                  onChange={(e) => updateOption('llmModel', e.target.value)}
+                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
+                >
+                  <option value="gpt-4o">GPT-4o (Recommended)</option>
+                  <option value="gpt-4o-mini">GPT-4o Mini (Faster)</option>
+                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                </select>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Cloud Services */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Cloud className="h-4 w-4 text-primary" />
+            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+              Cloud Services
+            </h4>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="doc-intelligence">Azure Document Intelligence</Label>
+                  <Badge variant="outline" className="text-xs">Enterprise</Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Enhanced OCR and document understanding
+                </p>
+              </div>
+              <Switch
+                id="doc-intelligence"
+                checked={options.useDocumentIntelligence}
+                onCheckedChange={(checked) => updateOption('useDocumentIntelligence', checked)}
+              />
+            </div>
+
+            {options.useDocumentIntelligence && (
+              <div className="ml-4 space-y-2">
+                <Label htmlFor="doc-intel-endpoint" className="text-sm">Endpoint URL</Label>
+                <Input
+                  id="doc-intel-endpoint"
+                  type="url"
+                  placeholder="https://your-resource.cognitiveservices.azure.com/"
+                  value={options.documentIntelligenceEndpoint}
+                  onChange={(e) => updateOption('documentIntelligenceEndpoint', e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
