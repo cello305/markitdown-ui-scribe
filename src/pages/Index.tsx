@@ -89,7 +89,14 @@ const Index = () => {
         throw new Error(`API error: ${response.status}`);
       }
 
-      const markdown = await response.text();
+      let markdown = await response.text();
+      // If the response is a JSON object with a 'result' property, use that as the markdown
+      try {
+        const json = JSON.parse(markdown);
+        if (json && typeof json.result === "string") {
+          markdown = json.result;
+        }
+      } catch {}
       setConvertedContent(markdown);
 
       // Increment conversion count for today
