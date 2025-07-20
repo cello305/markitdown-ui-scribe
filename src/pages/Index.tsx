@@ -149,13 +149,29 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
             </h1>
             
             <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
-              Transform your{" "}
+              Transform your PDFs, Word docs, presentations, spreadsheets, and more into clean, 
+              LLM-ready Markdown with advanced AI-powered processing.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <FileText className="h-4 w-4" />
+                <span className="text-sm">PDF, DOCX, PPTX</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <Zap className="h-4 w-4" />
+                <span className="text-sm">AI-Powered OCR</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
+                <Sparkles className="h-4 w-4" />
+                <span className="text-sm">Structure Preservation</span>
+              </div>
               <HoverCard>
                 <HoverCardTrigger asChild>
-                  <button className="text-primary-glow underline hover:no-underline font-medium">
-                    PDFs, Word docs, presentations, spreadsheets,{" "}
-                    <span className="text-white/90">and more</span>
-                  </button>
+                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 cursor-pointer hover:bg-white/30 transition-colors">
+                    <Sparkles className="h-4 w-4" />
+                    <span className="text-sm font-medium">and more</span>
+                  </div>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 p-4">
                   <div className="space-y-3">
@@ -191,22 +207,6 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                   </div>
                 </HoverCardContent>
               </HoverCard>
-              {" "}into clean, LLM-ready Markdown with advanced AI-powered processing.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <FileText className="h-4 w-4" />
-                <span className="text-sm">PDF, DOCX, PPTX</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <Zap className="h-4 w-4" />
-                <span className="text-sm">AI-Powered OCR</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-sm">Structure Preservation</span>
-              </div>
             </div>
           </div>
         </div>
