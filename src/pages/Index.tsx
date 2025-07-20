@@ -4,6 +4,7 @@ import { ConversionOptions, type ConversionOptions as ConversionOptionsType } fr
 import { MarkdownPreview } from '@/components/MarkdownPreview';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useToast } from '@/hooks/use-toast';
 import { FileText, Zap, Sparkles } from 'lucide-react';
 
@@ -148,8 +149,49 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
             </h1>
             
             <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
-              Transform your PDFs, Word docs, presentations, spreadsheets, and more into clean, 
-              LLM-ready Markdown with advanced AI-powered processing.
+              Transform your{" "}
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <button className="text-primary-glow underline hover:no-underline font-medium">
+                    PDFs, Word docs, presentations, spreadsheets,{" "}
+                    <span className="text-white/90">and more</span>
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80 p-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-sm">Supported File Types</h4>
+                    
+                    <div className="space-y-2">
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Office Formats</h5>
+                        <p className="text-xs text-muted-foreground">Word (.docx), PowerPoint (.pptx), Excel (.xlsx)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Media Files</h5>
+                        <p className="text-xs text-muted-foreground">Images with EXIF data (.png, .jpg, .jpeg, .gif, .bmp)</p>
+                        <p className="text-xs text-muted-foreground">Audio with transcription (.mp3, .wav)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Web & Data Formats</h5>
+                        <p className="text-xs text-muted-foreground">HTML, JSON, XML, CSV</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Archives</h5>
+                        <p className="text-xs text-muted-foreground">ZIP files (iterates over contents)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Documents</h5>
+                        <p className="text-xs text-muted-foreground">PDF, EPub</p>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+              {" "}into clean, LLM-ready Markdown with advanced AI-powered processing.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mt-8">
