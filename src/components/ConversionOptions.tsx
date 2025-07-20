@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Settings, Zap, Brain, Cloud } from 'lucide-react';
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Settings, Zap, Brain, Cloud } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ConversionOptionsProps {
   options: ConversionOptions;
@@ -18,16 +19,20 @@ export interface ConversionOptions {
   documentIntelligenceEndpoint: string;
   useLLMForImages: boolean;
   llmModel: string;
+  llmApiKey?: string;
   preserveStructure: boolean;
   extractMetadata: boolean;
   includeImages: boolean;
 }
 
-export function ConversionOptions({ options, onOptionsChange }: ConversionOptionsProps) {
-  const updateOption = (key: keyof ConversionOptions, value: any) => {
+export function ConversionOptions({
+  options,
+  onOptionsChange,
+}: ConversionOptionsProps) {
+  const updateOption = (key: keyof ConversionOptions, value: unknown) => {
     onOptionsChange({
       ...options,
-      [key]: value
+      [key]: value,
     });
   };
 
@@ -44,11 +49,13 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
           <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
             Basic Settings
           </h4>
-          
+
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="preserve-structure">Preserve Document Structure</Label>
+                <Label htmlFor="preserve-structure">
+                  Preserve Document Structure
+                </Label>
                 <p className="text-xs text-muted-foreground">
                   Maintain headings, lists, tables, and formatting
                 </p>
@@ -56,7 +63,9 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               <Switch
                 id="preserve-structure"
                 checked={options.preserveStructure}
-                onCheckedChange={(checked) => updateOption('preserveStructure', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("preserveStructure", checked)
+                }
               />
             </div>
 
@@ -70,7 +79,9 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               <Switch
                 id="extract-metadata"
                 checked={options.extractMetadata}
-                onCheckedChange={(checked) => updateOption('extractMetadata', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("extractMetadata", checked)
+                }
               />
             </div>
 
@@ -84,7 +95,9 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               <Switch
                 id="include-images"
                 checked={options.includeImages}
-                onCheckedChange={(checked) => updateOption('includeImages', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("includeImages", checked)
+                }
               />
             </div>
           </div>
@@ -100,13 +113,15 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               Advanced Features
             </h4>
           </div>
-          
+
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="enable-plugins">Enable Plugins</Label>
-                  <Badge variant="secondary" className="text-xs">Experimental</Badge>
+                  <Badge variant="secondary" className="text-xs">
+                    Experimental
+                  </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Use 3rd-party plugins for enhanced processing
@@ -115,7 +130,9 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               <Switch
                 id="enable-plugins"
                 checked={options.enablePlugins}
-                onCheckedChange={(checked) => updateOption('enablePlugins', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("enablePlugins", checked)
+                }
               />
             </div>
           </div>
@@ -131,38 +148,91 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               AI-Powered Processing
             </h4>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="llm-images">AI Image Description</Label>
-                  <Badge variant="outline" className="text-xs">Premium</Badge>
+                  <Badge variant="outline" className="text-xs">
+                    Premium
+                  </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Use GPT-4o to generate detailed image descriptions
+                  Use an LLM to generate detailed image descriptions
                 </p>
               </div>
               <Switch
                 id="llm-images"
                 checked={options.useLLMForImages}
-                onCheckedChange={(checked) => updateOption('useLLMForImages', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("useLLMForImages", checked)
+                }
               />
             </div>
 
             {options.useLLMForImages && (
-              <div className="ml-4 space-y-2">
-                <Label htmlFor="llm-model" className="text-sm">Model</Label>
+              <div className="ml-4 space-y-4">
+                <Label htmlFor="llm-model" className="text-sm font-semibold">
+                  Supported LLMs
+                </Label>
                 <select
                   id="llm-model"
                   value={options.llmModel}
-                  onChange={(e) => updateOption('llmModel', e.target.value)}
+                  onChange={(e) => updateOption("llmModel", e.target.value)}
                   className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
                 >
-                  <option value="gpt-4o">GPT-4o (Recommended)</option>
-                  <option value="gpt-4o-mini">GPT-4o Mini (Faster)</option>
-                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                  <optgroup label="OpenAI">
+                    <option value="gpt-4o">gpt-4o (recommended)</option>
+                    <option value="gpt-4">gpt-4</option>
+                    <option value="gpt-4-turbo">gpt-4 turbo preview</option>
+                    <option value="gpt-3.5-turbo">gpt-3.5 turbo</option>
+                  </optgroup>
+                  <optgroup label="Anthropic">
+                    <option value="claude-3-opus">Claude 3 Opus</option>
+                    <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                    <option value="claude-3-haiku">Claude 3 Haiku</option>
+                  </optgroup>
+                  <optgroup label="Google">
+                    <option value="gemini-pro">Gemini Pro</option>
+                    <option value="gemini-pro-vision">Gemini Pro Vision</option>
+                  </optgroup>
                 </select>
+                <form
+                  className="space-y-1"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <Label htmlFor="llm-key" className="text-sm">
+                    LLM API Key
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="llm-key"
+                      type="password"
+                      placeholder="Paste your LLM API key here"
+                      value={options.llmApiKey || ""}
+                      onChange={(e) =>
+                        updateOption("llmApiKey", e.target.value)
+                      }
+                      className="text-sm"
+                    />
+                    <Button
+                      type="submit"
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => {
+                        /* Optionally, you can add a toast or feedback here */
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Your key is securely stored in your browser only.
+                  </p>
+                </form>
               </div>
             )}
           </div>
@@ -178,13 +248,17 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               Cloud Services
             </h4>
           </div>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="doc-intelligence">Azure Document Intelligence</Label>
-                  <Badge variant="outline" className="text-xs">Enterprise</Badge>
+                  <Label htmlFor="doc-intelligence">
+                    Azure Document Intelligence
+                  </Label>
+                  <Badge variant="outline" className="text-xs">
+                    Enterprise
+                  </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Enhanced OCR and document understanding
@@ -193,19 +267,25 @@ export function ConversionOptions({ options, onOptionsChange }: ConversionOption
               <Switch
                 id="doc-intelligence"
                 checked={options.useDocumentIntelligence}
-                onCheckedChange={(checked) => updateOption('useDocumentIntelligence', checked)}
+                onCheckedChange={(checked) =>
+                  updateOption("useDocumentIntelligence", checked)
+                }
               />
             </div>
 
             {options.useDocumentIntelligence && (
               <div className="ml-4 space-y-2">
-                <Label htmlFor="doc-intel-endpoint" className="text-sm">Endpoint URL</Label>
+                <Label htmlFor="doc-intel-endpoint" className="text-sm">
+                  Endpoint URL
+                </Label>
                 <Input
                   id="doc-intel-endpoint"
                   type="url"
                   placeholder="https://your-resource.cognitiveservices.azure.com/"
                   value={options.documentIntelligenceEndpoint}
-                  onChange={(e) => updateOption('documentIntelligenceEndpoint', e.target.value)}
+                  onChange={(e) =>
+                    updateOption("documentIntelligenceEndpoint", e.target.value)
+                  }
                   className="text-sm"
                 />
               </div>
