@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, File, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, File, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { cn } from '@/lib/utils';
 
 interface FileUploadProps {
@@ -126,9 +127,49 @@ export function FileUpload({
             <p className="text-muted-foreground">
               Drag & drop files here, or <span className="text-primary font-medium">click to browse</span>
             </p>
-            <p className="text-sm text-muted-foreground">
-              Supports PDF, DOCX, PPTX, XLSX, Images, Audio, HTML, CSV, JSON, XML, ZIP
-            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span>Supports multiple file formats</span>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <button className="inline-flex items-center justify-center rounded-full p-1 hover:bg-accent transition-colors">
+                    <Info className="h-3 w-3" />
+                  </button>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80 p-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-sm">Supported File Types</h4>
+                    
+                    <div className="space-y-2">
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Office Formats</h5>
+                        <p className="text-xs text-muted-foreground">Word (.docx), PowerPoint (.pptx), Excel (.xlsx)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Media Files</h5>
+                        <p className="text-xs text-muted-foreground">Images with EXIF data (.png, .jpg, .jpeg, .gif, .bmp)</p>
+                        <p className="text-xs text-muted-foreground">Audio with transcription (.mp3, .wav)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Web & Data Formats</h5>
+                        <p className="text-xs text-muted-foreground">HTML, JSON, XML, CSV</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Archives</h5>
+                        <p className="text-xs text-muted-foreground">ZIP files (iterates over contents)</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">Documents</h5>
+                        <p className="text-xs text-muted-foreground">PDF, EPub</p>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
           </div>
 
           <Button variant="upload" size="lg" className="mt-4">
