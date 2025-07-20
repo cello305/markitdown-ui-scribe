@@ -48,16 +48,54 @@ const Index = () => {
       return;
     }
 
+    // Soft IP-based daily limit using localStorage
+    const today = new Date().toISOString().slice(0, 10);
+    const limitKey = `conversion_limit_${today}`;
+    let conversions = 0;
+    try {
+      conversions = parseInt(localStorage.getItem(limitKey) || "0", 10);
+    } catch {}
+    if (conversions >= 10) {
+      toast({
+        title: "Daily Limit Reached",
+        description:
+          "You have reached the maximum of 10 conversions for today. Please try again tomorrow.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsConverting(true);
 
     try {
-      // Simulate API call to MarkItDown service
-      // In a real implementation, this would call your backend API
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const file = selectedFiles[0];
+      const formData = new FormData();
+      formData.append("file", file);
 
-      // Mock conversion result
-      const mockMarkdown = generateMockMarkdown(selectedFiles[0]);
-      setConvertedContent(mockMarkdown);
+      const response = await fetch(
+        "https://markdown-api-jamesjbustos4292-jldwz30n.leapcell.dev/convert",
+        {
+          method: "POST",
+          headers: {
+            "x-api-key":
+              "52cefd489a1308a35ea36ca3cf8a9f836b07a80d979fcec0031a416c756ca19b",
+            // 'Content-Type' is NOT set to let browser set the correct boundary for multipart/form-data
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const markdown = await response.text();
+      setConvertedContent(markdown);
+
+      // Increment conversion count for today
+      try {
+        localStorage.setItem(limitKey, String(conversions + 1));
+      } catch {}
 
       toast({
         title: "Conversion Complete!",
