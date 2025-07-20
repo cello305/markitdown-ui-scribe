@@ -1,33 +1,41 @@
-import { useState } from 'react';
-import { FileUpload } from '@/components/FileUpload';
-import { ConversionOptions, type ConversionOptions as ConversionOptionsType } from '@/components/ConversionOptions';
-import { MarkdownPreview } from '@/components/MarkdownPreview';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { useToast } from '@/hooks/use-toast';
-import { FileText, Zap, Sparkles } from 'lucide-react';
+import { useState } from "react";
+import { FileUpload } from "@/components/FileUpload";
+import {
+  ConversionOptions,
+  type ConversionOptions as ConversionOptionsType,
+} from "@/components/ConversionOptions";
+import { MarkdownPreview } from "@/components/MarkdownPreview";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { useToast } from "@/hooks/use-toast";
+import { FileText, Zap, Sparkles } from "lucide-react";
 
 const Index = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [convertedContent, setConvertedContent] = useState<string>('');
+  const [convertedContent, setConvertedContent] = useState<string>("");
   const [isConverting, setIsConverting] = useState(false);
-  const [conversionOptions, setConversionOptions] = useState<ConversionOptionsType>({
-    enablePlugins: false,
-    useDocumentIntelligence: false,
-    documentIntelligenceEndpoint: '',
-    useLLMForImages: false,
-    llmModel: 'gpt-4o',
-    preserveStructure: true,
-    extractMetadata: true,
-    includeImages: true
-  });
-  
+  const [conversionOptions, setConversionOptions] =
+    useState<ConversionOptionsType>({
+      enablePlugins: false,
+      useDocumentIntelligence: false,
+      documentIntelligenceEndpoint: "",
+      useLLMForImages: false,
+      llmModel: "gpt-4o",
+      preserveStructure: true,
+      extractMetadata: true,
+      includeImages: true,
+    });
+
   const { toast } = useToast();
 
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
-    setConvertedContent(''); // Clear previous results
+    setConvertedContent(""); // Clear previous results
   };
 
   const convertToMarkdown = async () => {
@@ -35,32 +43,32 @@ const Index = () => {
       toast({
         title: "No files selected",
         description: "Please upload at least one file to convert",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsConverting(true);
-    
+
     try {
       // Simulate API call to MarkItDown service
       // In a real implementation, this would call your backend API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Mock conversion result
       const mockMarkdown = generateMockMarkdown(selectedFiles[0]);
       setConvertedContent(mockMarkdown);
-      
+
       toast({
         title: "Conversion Complete!",
         description: `Successfully converted ${selectedFiles.length} file(s) to Markdown`,
-        duration: 3000
+        duration: 3000,
       });
     } catch (error) {
       toast({
         title: "Conversion Failed",
         description: "An error occurred during conversion. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsConverting(false);
@@ -78,24 +86,36 @@ const Index = () => {
 
 ## Content Overview
 
-This document has been successfully converted from **${file.type}** to Markdown format using MarkItDown.
+This document has been successfully converted from **${
+      file.type
+    }** to Markdown format using MarkItDown.
 
 ### Key Features Processed:
 - ✅ Document structure preservation
 - ✅ Text content extraction
 - ✅ Metadata extraction
-${conversionOptions.includeImages ? '- ✅ Image processing' : '- ❌ Image processing (disabled)'}
-${conversionOptions.useLLMForImages ? '- ✅ AI-powered image descriptions' : '- ❌ AI image descriptions (disabled)'}
+${
+  conversionOptions.includeImages
+    ? "- ✅ Image processing"
+    : "- ❌ Image processing (disabled)"
+}
+${
+  conversionOptions.useLLMForImages
+    ? "- ✅ AI-powered image descriptions"
+    : "- ❌ AI image descriptions (disabled)"
+}
 
 ### Processing Options Used:
 ${Object.entries(conversionOptions)
-  .filter(([_, value]) => typeof value === 'boolean' && value)
-  .map(([key, _]) => `- ${key.replace(/([A-Z])/g, ' $1').toLowerCase()}`)
-  .join('\n')}
+  .filter(([_, value]) => typeof value === "boolean" && value)
+  .map(([key, _]) => `- ${key.replace(/([A-Z])/g, " $1").toLowerCase()}`)
+  .join("\n")}
 
 ---
 
-*This is a demo conversion. In a real implementation, this would contain the actual converted content from your ${file.type} file.*
+*This is a demo conversion. In a real implementation, this would contain the actual converted content from your ${
+      file.type
+    } file.*
 
 ## Sample Content Structure
 
@@ -139,7 +159,7 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
               <Sparkles className="h-4 w-4" />
               <span className="text-sm font-medium">Powered by MarkItDown</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
               Convert Documents to
               <br />
@@ -147,17 +167,76 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                 Beautiful Markdown
               </span>
             </h1>
-            
+
             <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
-              Transform your PDFs, Word docs, presentations, spreadsheets, and more into clean, 
-              LLM-ready Markdown with advanced AI-powered processing.
+              Transform your PDFs, Word docs, presentations, spreadsheets, and
+              more into clean, LLM-ready Markdown with advanced AI-powered
+              processing.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <FileText className="h-4 w-4" />
-                <span className="text-sm">PDF, DOCX, PPTX</span>
-              </div>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 cursor-pointer hover:bg-white/20 transition-colors">
+                    <FileText className="h-4 w-4" />
+                    <span className="text-sm font-medium">
+                      PDF, DOCX, PPTX, and more
+                    </span>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80 p-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-sm">
+                      Supported File Types
+                    </h4>
+                    <div className="space-y-2">
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">
+                          Office Formats
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          Word (.docx), PowerPoint (.pptx), Excel (.xlsx)
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">
+                          Media Files
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          Images with EXIF data (.png, .jpg, .jpeg, .gif, .bmp)
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Audio with transcription (.mp3, .wav)
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">
+                          Web & Data Formats
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          HTML, JSON, XML, CSV
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">
+                          Archives
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          ZIP files (iterates over contents)
+                        </p>
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-xs text-primary">
+                          Documents
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          PDF, EPub
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
                 <Zap className="h-4 w-4" />
                 <span className="text-sm">AI-Powered OCR</span>
@@ -166,47 +245,6 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                 <Sparkles className="h-4 w-4" />
                 <span className="text-sm">Structure Preservation</span>
               </div>
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 cursor-pointer hover:bg-white/30 transition-colors">
-                    <Sparkles className="h-4 w-4" />
-                    <span className="text-sm font-medium">and more</span>
-                  </div>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80 p-4">
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-sm">Supported File Types</h4>
-                    
-                    <div className="space-y-2">
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">Office Formats</h5>
-                        <p className="text-xs text-muted-foreground">Word (.docx), PowerPoint (.pptx), Excel (.xlsx)</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">Media Files</h5>
-                        <p className="text-xs text-muted-foreground">Images with EXIF data (.png, .jpg, .jpeg, .gif, .bmp)</p>
-                        <p className="text-xs text-muted-foreground">Audio with transcription (.mp3, .wav)</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">Web & Data Formats</h5>
-                        <p className="text-xs text-muted-foreground">HTML, JSON, XML, CSV</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">Archives</h5>
-                        <p className="text-xs text-muted-foreground">ZIP files (iterates over contents)</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">Documents</h5>
-                        <p className="text-xs text-muted-foreground">PDF, EPub</p>
-                      </div>
-                    </div>
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
             </div>
           </div>
         </div>
@@ -218,16 +256,16 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
           {/* File Upload Section */}
           <div className="lg:col-span-1 space-y-6">
             <FileUpload onFilesSelected={handleFilesSelected} />
-            
-            <ConversionOptions 
+
+            <ConversionOptions
               options={conversionOptions}
               onOptionsChange={setConversionOptions}
             />
 
             <Card className="p-6 bg-gradient-card border-border/50">
-              <Button 
-                variant="hero" 
-                size="xl" 
+              <Button
+                variant="hero"
+                size="xl"
                 className="w-full"
                 onClick={convertToMarkdown}
                 disabled={selectedFiles.length === 0 || isConverting}
@@ -244,7 +282,7 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                   </>
                 )}
               </Button>
-              
+
               {selectedFiles.length > 0 && (
                 <p className="text-center text-sm text-muted-foreground mt-3">
                   Ready to convert {selectedFiles.length} file(s)
@@ -255,7 +293,7 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
 
           {/* Preview Section */}
           <div className="lg:col-span-2">
-            <MarkdownPreview 
+            <MarkdownPreview
               content={convertedContent}
               fileName={selectedFiles[0]?.name?.replace(/\.[^/.]+$/, "")}
               isLoading={isConverting}
@@ -268,7 +306,10 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
       <footer className="border-t border-border/50 bg-muted/30 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>Built with ❤️ using MarkItDown • Transform any document into LLM-ready Markdown</p>
+            <p>
+              Built with ❤️ using MarkItDown • Transform any document into
+              LLM-ready Markdown
+            </p>
           </div>
         </div>
       </footer>
