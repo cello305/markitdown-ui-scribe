@@ -127,12 +127,12 @@ export function FileUpload({
             <p className="text-muted-foreground">
               Drag & drop files here, or <span className="text-primary font-medium">click to browse</span>
             </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span>Supports multiple file formats</span>
+            <p className="text-sm text-muted-foreground">
+              Supports{" "}
               <HoverCard>
                 <HoverCardTrigger asChild>
-                  <button className="inline-flex items-center justify-center rounded-full p-1 hover:bg-accent transition-colors">
-                    <Info className="h-3 w-3" />
+                  <button className="text-primary underline hover:no-underline font-medium">
+                    PDF, DOCX, PPTX
                   </button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 p-4">
@@ -169,7 +169,8 @@ export function FileUpload({
                   </div>
                 </HoverCardContent>
               </HoverCard>
-            </div>
+              {" "}and more file formats
+            </p>
           </div>
 
           <Button variant="upload" size="lg" className="mt-4">
