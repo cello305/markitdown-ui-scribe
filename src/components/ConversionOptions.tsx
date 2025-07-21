@@ -44,127 +44,90 @@ export function ConversionOptions({
       </div>
 
       <div className="space-y-6">
-        {/* Basic Options */}
+        {/* Combined Image & AI Box */}
         <div className="space-y-4">
           <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
-            Basic Settings
+            Image Processing & AI
           </h4>
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            {/* AI selection and key input first */}
+            <div className="space-y-2">
+              <Label htmlFor="llm-model" className="text-sm font-semibold">
+                Supported LLMs
+              </Label>
+              <select
+                id="llm-model"
+                value={options.llmModel}
+                onChange={(e) => updateOption("llmModel", e.target.value)}
+                className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
+              >
+                <optgroup label="OpenAI">
+                  <option value="gpt-4o">gpt-4o (recommended)</option>
+                  <option value="gpt-4">gpt-4</option>
+                  <option value="gpt-4-turbo">gpt-4 turbo preview</option>
+                  <option value="gpt-3.5-turbo">gpt-3.5 turbo</option>
+                </optgroup>
+                <optgroup label="Anthropic">
+                  <option value="claude-3-opus">Claude 3 Opus</option>
+                  <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                  <option value="claude-3-haiku">Claude 3 Haiku</option>
+                </optgroup>
+                <optgroup label="Google">
+                  <option value="gemini-pro">Gemini Pro</option>
+                  <option value="gemini-pro-vision">Gemini Pro Vision</option>
+                </optgroup>
+              </select>
+              <form
+                className="space-y-1"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <Label htmlFor="llm-key" className="text-sm">
+                  LLM API Key
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="llm-key"
+                    type="password"
+                    placeholder="Paste your LLM API key here"
+                    value={options.llmApiKey || ""}
+                    onChange={(e) => updateOption("llmApiKey", e.target.value)}
+                    className="text-sm"
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      /* Optionally, you can add a toast or feedback here */
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Your key is securely stored in your browser only.
+                </p>
+              </form>
+            </div>
+            {/* Enable Images only if LLM and key are set */}
+            <div className="flex items-center justify-between mt-4">
               <div className="space-y-0.5">
                 <Label htmlFor="include-images">Include Images</Label>
                 <p className="text-xs text-muted-foreground">
-                  Process and describe images in documents
+                  Process and describe images in documents (requires AI)
                 </p>
               </div>
               <Switch
                 id="include-images"
                 checked={options.includeImages}
+                disabled={!(options.llmApiKey && options.llmModel)}
                 onCheckedChange={(checked) =>
                   updateOption("includeImages", checked)
                 }
               />
             </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* AI-Powered Options */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Brain className="h-4 w-4 text-primary" />
-            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
-              AI-Powered Processing
-            </h4>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="llm-images">AI Image Description</Label>
-                  <Badge variant="outline" className="text-xs">
-                    API Key Required
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Use an LLM to generate detailed image descriptions
-                </p>
-              </div>
-              <Switch
-                id="llm-images"
-                checked={options.useLLMForImages}
-                onCheckedChange={(checked) =>
-                  updateOption("useLLMForImages", checked)
-                }
-              />
-            </div>
-
-            {options.useLLMForImages && (
-              <div className="ml-4 space-y-4">
-                <Label htmlFor="llm-model" className="text-sm font-semibold">
-                  Supported LLMs
-                </Label>
-                <select
-                  id="llm-model"
-                  value={options.llmModel}
-                  onChange={(e) => updateOption("llmModel", e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background"
-                >
-                  <optgroup label="OpenAI">
-                    <option value="gpt-4o">gpt-4o (recommended)</option>
-                    <option value="gpt-4">gpt-4</option>
-                    <option value="gpt-4-turbo">gpt-4 turbo preview</option>
-                    <option value="gpt-3.5-turbo">gpt-3.5 turbo</option>
-                  </optgroup>
-                  <optgroup label="Anthropic">
-                    <option value="claude-3-opus">Claude 3 Opus</option>
-                    <option value="claude-3-sonnet">Claude 3 Sonnet</option>
-                    <option value="claude-3-haiku">Claude 3 Haiku</option>
-                  </optgroup>
-                  <optgroup label="Google">
-                    <option value="gemini-pro">Gemini Pro</option>
-                    <option value="gemini-pro-vision">Gemini Pro Vision</option>
-                  </optgroup>
-                </select>
-                <form
-                  className="space-y-1"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <Label htmlFor="llm-key" className="text-sm">
-                    LLM API Key
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="llm-key"
-                      type="password"
-                      placeholder="Paste your LLM API key here"
-                      value={options.llmApiKey || ""}
-                      onChange={(e) =>
-                        updateOption("llmApiKey", e.target.value)
-                      }
-                      className="text-sm"
-                    />
-                    <Button
-                      type="submit"
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => {
-                        /* Optionally, you can add a toast or feedback here */
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Your key is securely stored in your browser only.
-                  </p>
-                </form>
-              </div>
-            )}
           </div>
         </div>
 
