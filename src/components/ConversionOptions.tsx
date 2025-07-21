@@ -71,22 +71,6 @@ export function ConversionOptions({
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="extract-metadata">Extract Metadata</Label>
-                <p className="text-xs text-muted-foreground">
-                  Include file properties and EXIF data
-                </p>
-              </div>
-              <Switch
-                id="extract-metadata"
-                checked={options.extractMetadata}
-                onCheckedChange={(checked) =>
-                  updateOption("extractMetadata", checked)
-                }
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
                 <Label htmlFor="include-images">Include Images</Label>
                 <p className="text-xs text-muted-foreground">
                   Process and describe images in documents
@@ -155,7 +139,7 @@ export function ConversionOptions({
                 <div className="flex items-center gap-2">
                   <Label htmlFor="llm-images">AI Image Description</Label>
                   <Badge variant="outline" className="text-xs">
-                    Premium
+                    API Key Required
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">

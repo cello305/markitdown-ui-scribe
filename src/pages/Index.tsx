@@ -17,7 +17,9 @@ import { FileText, Zap, Sparkles } from "lucide-react";
 
 const Index = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [convertedContent, setConvertedContent] = useState<string>("");
+  const [convertedResults, setConvertedResults] = useState<
+    { file: File; content: string }[]
+  >([]);
   const [isConverting, setIsConverting] = useState(false);
   const [conversionOptions, setConversionOptions] =
     useState<ConversionOptionsType>({
@@ -35,7 +37,7 @@ const Index = () => {
 
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
-    setConvertedContent(""); // Clear previous results
+    setConvertedResults([]); // Clear previous results
   };
 
   const convertToMarkdown = async () => {
@@ -55,58 +57,62 @@ const Index = () => {
     try {
       conversions = parseInt(localStorage.getItem(limitKey) || "0", 10);
     } catch {}
-    if (conversions >= 10) {
+    if (conversions + selectedFiles.length > 10) {
       toast({
         title: "Daily Limit Reached",
-        description:
-          "You have reached the maximum of 10 conversions for today. Please try again tomorrow.",
+        description: `You can only convert ${
+          10 - conversions
+        } more file(s) today.`,
         variant: "destructive",
       });
       return;
     }
 
     setIsConverting(true);
-
+    const results: { file: File; content: string }[] = [];
+    let successCount = 0;
     try {
-      const file = selectedFiles[0];
-      const formData = new FormData();
-      formData.append("file", file);
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      const response = await fetch(
-        "https://markdown-api-jamesjbustos4292-jldwz30n.leapcell.dev/convert",
-        {
-          method: "POST",
-          headers: {
-            "x-api-key":
-              "52cefd489a1308a35ea36ca3cf8a9f836b07a80d979fcec0031a416c756ca19b",
-            // 'Content-Type' is NOT set to let browser set the correct boundary for multipart/form-data
-          },
-          body: formData,
+        let markdown = "";
+        try {
+          const response = await fetch(
+            "https://markdown-api-jamesjbustos4292-jldwz30n.leapcell.dev/convert",
+            {
+              method: "POST",
+              headers: {
+                "x-api-key":
+                  "52cefd489a1308a35ea36ca3cf8a9f836b07a80d979fcec0031a416c756ca19b",
+              },
+              body: formData,
+            }
+          );
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+          }
+          markdown = await response.text();
+          try {
+            const json = JSON.parse(markdown);
+            if (json && typeof json.result === "string") {
+              markdown = json.result;
+            }
+          } catch {}
+          successCount++;
+        } catch (err) {
+          markdown = `**Error:** Could not convert file \`${file.name}\`\n\n${err}`;
         }
-      );
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        results.push({ file, content: markdown });
       }
-
-      let markdown = await response.text();
-      // If the response is a JSON object with a 'result' property, use that as the markdown
-      try {
-        const json = JSON.parse(markdown);
-        if (json && typeof json.result === "string") {
-          markdown = json.result;
-        }
-      } catch {}
-      setConvertedContent(markdown);
-
+      setConvertedResults(results);
       // Increment conversion count for today
       try {
-        localStorage.setItem(limitKey, String(conversions + 1));
+        localStorage.setItem(limitKey, String(conversions + successCount));
       } catch {}
-
       toast({
         title: "Conversion Complete!",
-        description: `Successfully converted ${selectedFiles.length} file(s) to Markdown`,
+        description: `Successfully converted ${successCount} file(s) to Markdown`,
         duration: 3000,
       });
     } catch (error) {
@@ -224,8 +230,9 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                 <HoverCardTrigger asChild>
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 cursor-pointer hover:bg-white/20 transition-colors">
                     <FileText className="h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      PDF, DOCX, PPTX, and more
+                    <span className="text-sm">
+                      PDF, DOCX, PPTX,{" "}
+                      <strong className="font-bold">and more</strong>
                     </span>
                   </div>
                 </HoverCardTrigger>
@@ -248,7 +255,7 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                           Media Files
                         </h5>
                         <p className="text-xs text-muted-foreground">
-                          Images with EXIF data (.png, .jpg, .jpeg, .gif, .bmp)
+                          Images (.png, .jpg, .jpeg, .gif, .bmp)
                         </p>
                         <p className="text-xs text-muted-foreground">
                           Audio with transcription (.mp3, .wav)
@@ -337,12 +344,42 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
           </div>
 
           {/* Preview Section */}
-          <div className="lg:col-span-2">
-            <MarkdownPreview
-              content={convertedContent}
-              fileName={selectedFiles[0]?.name?.replace(/\.[^/.]+$/, "")}
-              isLoading={isConverting}
-            />
+          <div className="lg:col-span-2 space-y-8">
+            {isConverting && (
+              <Card className="p-6 bg-gradient-card border-border/50">
+                <div className="flex items-center justify-center h-96">
+                  <div className="text-center space-y-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-muted-foreground">
+                      Converting documents to Markdown...
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
+            {!isConverting && convertedResults.length === 0 && (
+              <Card className="p-6 bg-gradient-card border-border/50">
+                <div className="flex items-center justify-center h-96">
+                  <div className="text-center space-y-4">
+                    <FileText className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <p className="text-muted-foreground">
+                      Upload a document to see the converted Markdown here
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
+            {!isConverting && convertedResults.length > 0 && (
+              <div className="space-y-8">
+                {convertedResults.map(({ file, content }) => (
+                  <MarkdownPreview
+                    key={file.name + file.size + file.lastModified}
+                    content={content}
+                    fileName={file.name.replace(/\.[^/.]+$/, "")}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
