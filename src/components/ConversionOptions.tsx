@@ -49,26 +49,7 @@ export function ConversionOptions({
           <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
             Basic Settings
           </h4>
-
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="preserve-structure">
-                  Preserve Document Structure
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  Maintain headings, lists, tables, and formatting
-                </p>
-              </div>
-              <Switch
-                id="preserve-structure"
-                checked={options.preserveStructure}
-                onCheckedChange={(checked) =>
-                  updateOption("preserveStructure", checked)
-                }
-              />
-            </div>
-
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="include-images">Include Images</Label>
@@ -81,41 +62,6 @@ export function ConversionOptions({
                 checked={options.includeImages}
                 onCheckedChange={(checked) =>
                   updateOption("includeImages", checked)
-                }
-              />
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Advanced Options */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-primary" />
-            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
-              Advanced Features
-            </h4>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="enable-plugins">Enable Plugins</Label>
-                  <Badge variant="secondary" className="text-xs">
-                    Experimental
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Use 3rd-party plugins for enhanced processing
-                </p>
-              </div>
-              <Switch
-                id="enable-plugins"
-                checked={options.enablePlugins}
-                onCheckedChange={(checked) =>
-                  updateOption("enablePlugins", checked)
                 }
               />
             </div>

@@ -15,6 +15,15 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { FileText, Zap, Sparkles } from "lucide-react";
 
+import excelIcon from "@/images/excel.jpg";
+import wordIcon from "@/images/docx.png";
+import powerpointIcon from "@/images/ppt.png";
+import htmlIcon from "@/images/html.png";
+import zipIcon from "@/images/zip.png";
+import audioIcon from "@/images/mp3.png";
+import imageIcon from "@/images/image.png";
+import pdfIcon from "@/images/pdf.png";
+
 const Index = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [convertedResults, setConvertedResults] = useState<
@@ -238,65 +247,58 @@ This is **bold text** and this is *italic text*. Here's a [link example](https:/
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 p-4">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-sm">
+                    <h4 className="font-semibold text-sm mb-2">
                       Supported File Types
                     </h4>
-                    <div className="space-y-2">
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">
-                          Office Formats
-                        </h5>
-                        <p className="text-xs text-muted-foreground">
-                          Word (.docx), PowerPoint (.pptx), Excel (.xlsx)
-                        </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-2">
+                      {/* Office Formats */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={excelIcon} alt="Excel" className="h-5 w-5" />
+                        <span className="text-xs">Excel (.xlsx)</span>
                       </div>
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">
-                          Media Files
-                        </h5>
-                        <p className="text-xs text-muted-foreground">
-                          Images (.png, .jpg, .jpeg, .gif, .bmp)
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Audio with transcription (.mp3, .wav)
-                        </p>
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={wordIcon} alt="Word" className="h-5 w-5" />
+                        <span className="text-xs">Word (.docx)</span>
                       </div>
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">
-                          Web & Data Formats
-                        </h5>
-                        <p className="text-xs text-muted-foreground">
-                          HTML, JSON, XML, CSV
-                        </p>
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img
+                          src={powerpointIcon}
+                          alt="PowerPoint"
+                          className="h-5 w-5"
+                        />
+                        <span className="text-xs">PowerPoint (.pptx)</span>
                       </div>
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">
-                          Archives
-                        </h5>
-                        <p className="text-xs text-muted-foreground">
-                          ZIP files (iterates over contents)
-                        </p>
+                      {/* Media Files */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={imageIcon} alt="Image" className="h-5 w-5" />
+                        <span className="text-xs">
+                          Images (.png, .jpg, .gif)
+                        </span>
                       </div>
-                      <div>
-                        <h5 className="font-medium text-xs text-primary">
-                          Documents
-                        </h5>
-                        <p className="text-xs text-muted-foreground">
-                          PDF, EPub
-                        </p>
+                      {/* Audio Files */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={audioIcon} alt="Audio" className="h-5 w-5" />
+                        <span className="text-xs">Audio (.mp3, .wav)</span>
+                      </div>
+                      {/* Web & Data Formats */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={htmlIcon} alt="HTML" className="h-5 w-5" />
+                        <span className="text-xs">HTML, JSON, XML, CSV</span>
+                      </div>
+                      {/* Archives */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={zipIcon} alt="ZIP" className="h-5 w-5" />
+                        <span className="text-xs">ZIP files</span>
+                      </div>
+                      {/* Documents */}
+                      <div className="flex items-center gap-2 bg-white/5 rounded px-2 py-1">
+                        <img src={pdfIcon} alt="PDF" className="h-5 w-5" />
+                        <span className="text-xs">PDF, EPub</span>
                       </div>
                     </div>
                   </div>
                 </HoverCardContent>
               </HoverCard>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <Zap className="h-4 w-4" />
-                <span className="text-sm">AI-Powered OCR</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-sm">Structure Preservation</span>
-              </div>
             </div>
           </div>
         </div>
